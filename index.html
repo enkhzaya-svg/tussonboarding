@@ -11,7 +11,7 @@
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         
         /* Horizontal Flow Line */
-        .flow-container { position: relative; display: flex; justify-content: justify; align-items: start; width: 100%; padding: 20px 0; }
+        .flow-container { position: relative; display: flex; justify-content: justify; align-items: start; width: 100%; padding: 20px 0; min-width: 1000px; }
         .flow-line-bg { position: absolute; top: 40px; left: 0; right: 0; height: 2px; background: #e2e8f0; z-index: 0; }
         .flow-line-progress { position: absolute; top: 40px; left: 0; height: 2px; background: #4f46e5; z-index: 1; transition: width 0.4s ease; }
         
@@ -30,8 +30,10 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Custom Scrollbar for flow on mobile */
-        .scroll-hide::-webkit-scrollbar { display: none; }
-        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .scroll-hide::-webkit-scrollbar { height: 6px; }
+        .scroll-hide::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .scroll-hide::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .scroll-hide::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-900">
@@ -61,7 +63,7 @@
             <!-- Roadmap Flow (Horizontal) -->
             <div class="mb-12 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
                 <h2 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-8 text-center">Сургалтын замын зураг</h2>
-                <div class="overflow-x-auto scroll-hide">
+                <div class="overflow-x-auto scroll-hide pb-4">
                     <div id="roadmap-flow" class="flow-container">
                         <!-- Content injected by JS -->
                     </div>
@@ -83,30 +85,41 @@
         const steps = [
             {
                 title: "Байгууллага угсрах",
-                icon: "settings",
-                video: "https://www.youtube.com/watch?v=0M9qSsX3LTg",
-                description: "Онлайн / нэмэлт асуух зүйл байвал онлайн уулзалт хийх. Бичлэгийг үзэн дарааллын дагуу байгууллагаа угсарна.",
+                icon: "building",
+                video: "#",
+                description: "Зөвлөх үйлчилгээ- Шаардлагатай тохиолдолд нэмэлт асуух зүйл байвал хариуцсан ажилтантай холбогдон онлайн уулзалтын цаг товлох.",
                 tasks: [
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк- холбоосоор орон</a> байгуулагын тохиргоо цэсний зааварчилгаа бичлэг үзэх",
+                    "Бичлэгийг үзэн дарааллын дагуу байгууллагаа угсрах",
                     "Байгууллагын ерөнхий мэдээлэл оруулах [зорилго/үнэт зүйл/алсын хараа]",
                     "Газар нэгж хэлтэс үүсгэх",
                     "Үүрэг роль/Ажлын байр үүсгэх",
                     "Ажилтан бүрийн ажлын байрны эрхийн тохиргоог хийх",
-                    "Ажилтнуудаа програмд бүртгэх",
+                    "Ажилтнуудаа програмд бүртгэх"
+                ],
+                workshopPrep: null
+            },
+            {
+                title: "Хүний нөөц",
+                icon: "users",
+                description: "Зөвлөх үйлчилгээ- Шаардлагатай тохиолдолд нэмэлт асуух зүйл байвал хариуцсан ажилтантай холбогдон онлайн уулзалтын цаг товлох.",
+                tasks: [
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк- холбоосоор орон</a> Хүний Нөөц модулын зааварчилгаа бичлэг үзэх",
+                    "Бичлэгийг үзэн дарааллын дагуу хүний нөөцийн мэдээллүүдийг оруулах",
                     "Ажлын цагийн хуваариа үүсгэх",
                     "Оффисын байршлаа тохируулах",
                     "Оффсайт/Чөлөөний хүсэлтүүдээ үүсгэх",
                     "Амралтын өдөр/Бүх нийтийн амралтын өдрүүдийг үүсгэх",
                     "Ажилтнуудыг бүх мэдээллүүдийг тохируулан бүртгэх"
-                ],
-                workshopPrep: null
+                ]
             },
             {
                 title: "Ажлын урсгал",
-                icon: "refresh-cw",
-                description: "Байгууллагын тогтмол хийгддэг үйл ажиллагааг системд оруулан автоматжуулах үндсэн шат. Энэ шатанд онлайн уулзалт хийж Воркшоп сургалт явуулна.",
+                icon: "git-merge",
+                description: "АЖЛЫН УРГСГАЛ УГСРАХ- Воркшоп сургалт.",
                 tasks: [
-                    "Сургалтын бэлтгэл дээрх зүйлсийг бэлтгэх",
-                    "<a href='https://new.tuss.io/form/form-detail/aW5mb19iYXNlX2lkPTM0NmM4Jmxhbmd1YWdlPW1uJmxvZ289aHR0cHM6Ly9iYXNlLWFwaS50dXNzLmlvL21hZGIhL29yZ19sb2dvL01qWXdNVElzTURJek9EVTNNellFSTnprdy53ZWJw' target='_blank' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Энэ холбоосоор орон</a> сургалт товлох хугацааг товлох"
+                    "Сургалтыг ороход доорх зүйлсийг бэлтгэх",
+                    "<a href='https://new.tuss.io/form/form-detail/aW5mb19iYXNlX2lkPTM0NmM4Jmxhbmd1YWdlPW1uJmxvZ289aHR0cHM6Ly9iYXNlLWFwaS50dXNzLmlvL21hZGIhL29yZ19sb2dvL01qWXdNVElzTURJek9EVTNNellFSTnprdy53ZWJw' target='_blank' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>ЛИНК - холбоосоор орон</a> сургалт орох хугацааг товлох"
                 ],
                 workshopPrep: [
                     "Газар нэгж хэлтсийн тогтмол ашигладаг ажлын урсгалуудыг тодорхой болгох/үүсгэх",
@@ -114,69 +127,105 @@
                     "Ажлын байрны чиг үүргийн дагуу тухайн ажилтны тогтмол хийдэг ажлын урсгалыг тодорхой болгох/үүсгэх",
                     "Ажлын урсгалын үе шатууд тус бүр хэрхэн ажилтан тухайн ажлын үе шатаа гүйцэтгэсэн мэдээллийг цуглуулах маягтыг угсрах [энгийн/pdf маягт угсрах]"
                 ],
-                note: "Сургалтын бэлтгэл бэлдэхдээ нийт ажилчид эсвэл газар нэгж бүрийн төлөөлөл байх хэрэгтэйг анхаарна уу. (Онлайн уулзалт хийнэ)"
+                note: "Санамж: Сургалтын бэлтгэл бэлдэхдээ нийт ажилчид эсвэл газар нэгж бүрийн төлөөлөл байх хэрэгтэйг анхаарна уу."
             },
             {
                 title: "Ажлын хавтас",
-                icon: "folder-kanban",
-                description: "Ажлуудыг ангилах, KPI тооцох боломжтой бүтэц үүсгэх. Энэ нь тайлангийн үндэс болно.",
+                icon: "folder-tree",
+                description: "Ажлын хавтас үүсгэх.",
                 tasks: [
-                    "Ажлын хавтасны зохицуулалтыг тодорхойлох",
-                    "Нээлттэй болон Хаалттай хавтас үүсгэх",
-                    "Ажилчдын хувийн хавтас тохируулах"
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк - холбоосоор орон</a> АЖЛЫН ХАВТАС үүсгэх зааварчилгаа үзэх /00:50- 05:17мин/",
+                    "Бичлэгний зааврын дагуу Ажлын хавтсуудаа үүсгэх",
+                    "Ажлын хавтасны зохицуулалтыг тодорхой болгох/дотооддоо ойлголт нэгдэх",
+                    "Газар нэгж хэлтсийн ажлын хавтас үүсгэх [нээлттэй/хаалттай]",
+                    "Хаалттай үүсгэх тохиолдолд тухайн хавтсанд нэвтрэх эрхтэй ажилтнуудыг сонгон үүсгэх",
+                    "Үүсгэсэн Газар нэгж хэлтсийн хавтас дотор тухайн хавтсанд хамаарах ажилтнуудын хувийн хавтсыг үүсгэх [нээлттэй/хаалттай]"
                 ],
-                note: "Ажлын хавтас нь KPI тооцоход хэрэглэгдэх тул Төсөл эсвэл Газар нэгжээр нь оновчтой нэрлээрэй."
+                note: "Санамж: Ажлын хавтас нь танай байгууллагын газар нэгж тус бүрийн KPI тооцоход хэрэглэгдэх тул та нэгтгэж KPI үнэлэх боломжтой байхаар үүсгэнэ үү. Жишээ: Төсөл тус бүрээр, Газар нэгж тус бүрээр, Нэг зорилго, зорилт, чиглэлд хамаарж байгаа ажлаар гэх мэт"
             },
             {
-                title: "Ажил ба Хяналт",
+                title: "7 хоног",
+                icon: "calendar-days",
+                description: "7 хоног модул ашиглалт.",
+                tasks: [
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк - холбоосоор орон</a> 7 хоног модулийн зааварчилгаа бичлэг үзэх",
+                    "Бичлэгний зааврын дагуу 7 хоног модулыг ашиглах",
+                    "Ажилтан бүр 7 хоног модулаар тухайн 7 хоногийн ажлын төлөвлөгөөгөө үүсгэх",
+                    "Төлөвлөсөн ажил бүр дээр хэдэн цаг зарцуулахаа оруулах",
+                    "Гүйцэж дууссан ажилдаа хэдэн цаг зарцуулснаа оруулах"
+                ]
+            },
+            {
+                title: "Ажил үүсгэх",
                 icon: "check-square",
-                description: "Төлөвлөгөөт ажлуудыг системд оруулах, гүйцэтгэлийг хянах, хариуцлага оноох.",
+                description: "Ажил үүсгэх- Воркшоп сургалт.",
                 tasks: [
-                    "Ажил үүсгэх туршилт хийх",
-                    "Улирал, сарын төлөвлөгөөг оруулах"
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк- холбоосоор орон</a> АЖИЛ үүсгэх бичлэгийг үзэх /05:10- 19:20мин/",
+                    "Бичлэгийн дагуу ажил үүсгэх турших",
+                    "Support idea- Газар нэгжийн улирал, сар-ийн хийгдэх ажлын төлөвлөгөөг боловсруулан оруулах"
                 ],
                 workshopPrep: [
-                    "Ажлын хавтаснуудыг бэлэн болгосон байх",
-                    "Ажилтан бүр 3-аас доошгүй ажил үүсгэж туршсан байх"
+                    "Газар нэгжүүдийн ашиглах ажлын хавтсыг тодорхой болгон үүсгэсэн байна",
+                    "Газар нэгж/ажилтнуудын тогтмол ашиглах ажлын урсгалуудаг тодорхой болгон үүсгэсэн байна",
+                    "Ажилтнууд одоо хийж буй ажлаасаа дор хаяж 3 ажлыг ажлын урсгал тохируулан өөрийн ажлын хавтсанд үүсгэсэн байна"
                 ]
             },
             {
-                title: "Автоматжуулалт",
+                title: "Баримт бичиг",
                 icon: "file-text",
-                description: "Байгууллагын дүрэм журам, маягтуудыг цахимжуулж, цаасгүй технологид шилжих.",
+                description: "Баримт бичгийг автоматжуулах-Воркшоп сургалт - нэн шаардлагатай үед.",
                 tasks: [
-                    "Дүрэм журмуудаа системд оруулах",
-                    "Маягт оруулах ба угсрах"
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк- холбоосоор орон</a> ДҮРЭМ ЖУРАМ бичлэгийг үзэх",
+                    "Бичлэгийн дагуу дүрэм журмаа оруулах",
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк- холбоосоор орон</a> баримт бичиг модулийн зааварчилгаа бичлэгийг үзэх",
+                    "Бичлэгийн дагуу маягт оруулах/угсрах"
+                ],
+                note: "Зөвлөх үйлчилгээ- Шаарлагатай тохиолдолд нэмэлт асуух зүйл байвал хариуцсан ажилтантай холбогдон онлайн уулзалтын цаг товлох"
+            },
+            {
+                title: "AI шийдэл",
+                icon: "bot",
+                description: "AI-н шийдлүүдийг ашиглах- Воркшоп сургалт.",
+                tasks: [
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк- холбоосоор орон</a> AI ашиглах зааварчилгаа бичлэгийг үзэх",
+                    "Бичлэгийн дагуу AI- шийдлүүдийг турших",
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк- холбоосоор орон</a> сургалт орох хугацаааг товлох"
                 ],
                 workshopPrep: [
-                    "Багадаа 2 журам бэлдсэн байх",
-                    "1 энгийн маягт, 1 PDF маягт бэлдэх"
+                    "AI-р үүсгэх ажлын урсгалын нэрийг тодорхой болгох",
+                    "AI-р үүсгэх дүрэм журмыг тодорхой болгох",
+                    "AI-р үүсгэх маягтын нэр,бүтэц,агуулгыг тодорхой болгон бэлдэх"
                 ]
             },
             {
-                title: "Зорилго ба KPI",
+                title: "KPI холбох",
                 icon: "target",
-                description: "Стратегийн зорилгыг гүйцэтгэлийн үнэлгээтэй уялдуулж, үр дүнг тоогоор хэмжих.",
+                description: "Зорилгыг KPI- тай холбон угсрах- Воркшоп сургалт.",
                 tasks: [
-                    "Зорилго үүсгэн турших",
-                    "Үнэлгээний шалгуур үзүүлэлт оруулах"
+                    "Сургалтыг ороход доорх зүйлсийг бэлтгэх",
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк- холбоосоор орон</a> сургалт орох хугацааг товлох"
                 ],
                 workshopPrep: [
-                    "Ажилтнуудын KPI хэмжүүрүүдийг тодорхой болгох",
-                    "Ажлын процесс ба хариуцлагыг холбох"
-                ]
+                    "Ажилтан бүрийн ажлын хавтас үүссэн байх",
+                    "Ажилтнууд ажлын хавтсандаа ажлуудаа төлөвлөсөн байх",
+                    "Ажилнуудын ашиглах ажлын процес тодорхой болсон байх",
+                    "Ажилтныг үнэлэх үнэлгээ тодорхой болсон байх [ үнэлгээ оруулах тохиолдолд]",
+                    "Ажилтнуудын KPI тооцох хэмжүүр үзүүлэлтүүд тодорхой болсон байх"
+                ],
+                note: "ВОРКШОП СУРГАЛТЫН БЭЛТГЭЛ /ӨМНӨХ БҮХ ДААЛГАВАР ХИЙСЭН БАЙХ ЁСТОЙ/"
             },
             {
                 title: "Комплаенс",
                 icon: "shield",
-                description: "Хууль тогтоомж, стандарт, дотоод журмын нийцлийг хангах хяналтын тогтолцоо.",
+                description: "Комплаенс модулыг ашиглах нь - воркшоп сургалт.",
                 tasks: [
-                    "Комплаенс модуль туршиж үзэх",
-                    "Framework үүсгэх"
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк - холбоосоор орон</a> Комплаенс модулын зааварчилгаа бичлэг үзэх",
+                    "Сургалтыг ороход доорх зүйлсийг бэлтгэх",
+                    "<a href='#' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Линк- Холбоосоор орон</a> сургалт орох хугацааг товлох"
                 ],
                 workshopPrep: [
-                    "Шинжилгээ хийх журмаа бэлдсэн байх",
-                    "Хууль тогтоомжийн жагсаалт бэлдэх"
+                    "Шинжилгээ хийх журмаа бэлдсэн байх /2 pdf файл/",
+                    "Хуультай нийцлийн шинжилгээ хийх бол бичлэгээ үзэн Legalinfo-s хуулиа сонгон уншуулан compliance framework үүсгэсэн байх"
                 ]
             }
         ];
@@ -224,6 +273,12 @@
             document.getElementById('flow-progress').style.width = `${progress}%`;
             
             lucide.createIcons();
+            
+            // Scroll selected step into view smoothly
+            const activeEl = container.children[activeStep + 2]; // +2 because of background lines
+            if(activeEl) {
+                activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
         }
 
         function renderDetail() {
@@ -270,7 +325,7 @@
                                     const checked = completedTasks[`${activeStep}-${i}`];
                                     return `
                                         <div onclick="toggleTask(${activeStep}, ${i})" class="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 cursor-pointer transition-all border border-transparent hover:border-slate-100 group">
-                                            <div class="mt-0.5 w-6 h-6 rounded-lg border-2 ${checked ? 'bg-emerald-500 border-emerald-500 shadow-lg shadow-emerald-100' : 'border-slate-200 bg-white group-hover:border-indigo-400'} flex items-center justify-center transition-all">
+                                            <div class="mt-0.5 w-6 h-6 rounded-lg border-2 ${checked ? 'bg-emerald-500 border-emerald-500 shadow-lg shadow-emerald-100' : 'border-slate-200 bg-white group-hover:border-indigo-400'} flex items-center justify-center transition-all shrink-0">
                                                 ${checked ? '<i data-lucide="check" class="w-4 h-4 text-white"></i>' : ''}
                                             </div>
                                             <span class="text-sm font-medium ${checked ? 'text-slate-400 line-through' : 'text-slate-700'}">${task}</span>
@@ -296,7 +351,7 @@
                                             const checked = completedTasks[`${activeStep}-p-${i}`];
                                             return `
                                                 <div onclick="toggleTask(${activeStep}, ${i}, true)" class="flex items-start gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 cursor-pointer transition-all border border-white/5">
-                                                    <div class="mt-0.5 w-6 h-6 rounded-lg border-2 ${checked ? 'bg-indigo-500 border-indigo-500' : 'border-slate-600 bg-transparent'} flex items-center justify-center transition-all">
+                                                    <div class="mt-0.5 w-6 h-6 rounded-lg border-2 ${checked ? 'bg-indigo-500 border-indigo-500' : 'border-slate-600 bg-transparent'} flex items-center justify-center transition-all shrink-0">
                                                         ${checked ? '<i data-lucide="check" class="w-4 h-4 text-white"></i>' : ''}
                                                     </div>
                                                     <span class="text-sm font-medium ${checked ? 'text-slate-500 line-through' : 'text-slate-200'}">${prep}</span>
@@ -309,7 +364,7 @@
 
                             ${step.note ? `
                                 <div class="bg-amber-50 p-8 rounded-3xl border border-amber-100 flex gap-4">
-                                    <div class="text-amber-500"><i data-lucide="info"></i></div>
+                                    <div class="text-amber-500 shrink-0"><i data-lucide="info"></i></div>
                                     <div>
                                         <h4 class="font-bold text-amber-900 mb-2">Санамж</h4>
                                         <p class="text-sm text-amber-800 leading-relaxed">${step.note}</p>
@@ -331,7 +386,8 @@
                 </div>
             `;
             lucide.createIcons();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Optional: Uncomment below line to scroll to top smoothly on every change. 
+            // window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function navigate(dir) {
