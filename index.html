@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuss.io - Хэрэглэгчийн зааварчилгаа (Horizontal Flow)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        
+        /* Horizontal Flow Line */
+        .flow-container { position: relative; display: flex; justify-content: justify; align-items: start; width: 100%; padding: 20px 0; }
+        .flow-line-bg { position: absolute; top: 40px; left: 0; right: 0; height: 2px; background: #e2e8f0; z-index: 0; }
+        .flow-line-progress { position: absolute; top: 40px; left: 0; height: 2px; background: #4f46e5; z-index: 1; transition: width 0.4s ease; }
+        
+        /* Step Styles */
+        .step-item { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; min-width: 100px; }
+        .step-circle { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; background: white; }
+        
+        .step-active .step-circle { border-color: #4f46e5; background: #4f46e5; color: white; box-shadow: 0 0 0 4px #e0e7ff; transform: scale(1.1); }
+        .step-completed .step-circle { border-color: #10b981; background: #10b981; color: white; }
+        
+        .step-text { margin-top: 12px; font-size: 11px; font-weight: 600; text-align: center; color: #94a3b8; transition: all 0.3s ease; max-width: 90px; }
+        .step-active .step-text { color: #4f46e5; font-weight: 700; }
+        .step-completed .step-text { color: #10b981; }
+
+        .detail-card { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom Scrollbar for flow on mobile */
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-900">
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">T</div>
+                    <h1 class="font-bold text-lg">Tuss.io Onboarding</h1>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="flex flex-col items-end">
+                        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Нийт явц</span>
+                        <div class="flex items-center gap-3">
+                            <div class="w-24 md:w-48 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                <div id="top-progress-bar" class="h-full bg-indigo-600 transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                            <span id="top-progress-text" class="text-xs font-bold text-indigo-600">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 w-full max-w-6xl mx-auto px-4 py-8 md:py-12">
+            <!-- Roadmap Flow (Horizontal) -->
+            <div class="mb-12 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-8 text-center">Сургалтын замын зураг</h2>
+                <div class="overflow-x-auto scroll-hide">
+                    <div id="roadmap-flow" class="flow-container">
+                        <!-- Content injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Content Area -->
+            <div id="active-step-content">
+                <!-- Content injected by JS -->
+            </div>
+        </main>
+
+        <footer class="py-10 text-center border-t border-slate-200">
+            <p class="text-slate-400 text-sm">© 2024 Tuss.io - Систем төлөвшүүлэх хөтөч</p>
+        </footer>
+    </div>
+
+    <script>
+        const steps = [
+            {
+                title: "Байгууллага угсрах",
+                icon: "settings",
+                video: "https://www.youtube.com/watch?v=0M9qSsX3LTg",
+                description: "Онлайн / нэмэлт асуух зүйл байвал онлайн уулзалт хийх. Бичлэгийг үзэн дарааллын дагуу байгууллагаа угсарна.",
+                tasks: [
+                    "Байгууллагын ерөнхий мэдээлэл оруулах [зорилго/үнэт зүйл/алсын хараа]",
+                    "Газар нэгж хэлтэс үүсгэх",
+                    "Үүрэг роль/Ажлын байр үүсгэх",
+                    "Ажилтан бүрийн ажлын байрны эрхийн тохиргоог хийх",
+                    "Ажилтнуудаа програмд бүртгэх",
+                    "Ажлын цагийн хуваариа үүсгэх",
+                    "Оффисын байршлаа тохируулах",
+                    "Оффсайт/Чөлөөний хүсэлтүүдээ үүсгэх",
+                    "Амралтын өдөр/Бүх нийтийн амралтын өдрүүдийг үүсгэх",
+                    "Ажилтнуудыг бүх мэдээллүүдийг тохируулан бүртгэх"
+                ],
+                workshopPrep: null
+            },
+            {
+                title: "Ажлын урсгал",
+                icon: "refresh-cw",
+                description: "Байгууллагын тогтмол хийгддэг үйл ажиллагааг системд оруулан автоматжуулах үндсэн шат. Энэ шатанд онлайн уулзалт хийж Воркшоп сургалт явуулна.",
+                tasks: [
+                    "Сургалтын бэлтгэл дээрх зүйлсийг бэлтгэх",
+                    "<a href='https://new.tuss.io/form/form-detail/aW5mb19iYXNlX2lkPTM0NmM4Jmxhbmd1YWdlPW1uJmxvZ289aHR0cHM6Ly9iYXNlLWFwaS50dXNzLmlvL21hZGIhL29yZ19sb2dvL01qWXdNVElzTURJek9EVTNNellFSTnprdy53ZWJw' target='_blank' class='text-indigo-600 underline font-semibold hover:text-indigo-800' onclick='event.stopPropagation()'>Энэ холбоосоор орон</a> сургалт товлох хугацааг товлох"
+                ],
+                workshopPrep: [
+                    "Газар нэгж хэлтсийн тогтмол ашигладаг ажлын урсгалуудыг тодорхой болгох/үүсгэх",
+                    "Байгууллага дотор бүх ажилчдын тогтмол хийдэг ажлын урсгалыг тодорхой болгох/үүсгэх",
+                    "Ажлын байрны чиг үүргийн дагуу тухайн ажилтны тогтмол хийдэг ажлын урсгалыг тодорхой болгох/үүсгэх",
+                    "Ажлын урсгалын үе шатууд тус бүр хэрхэн ажилтан тухайн ажлын үе шатаа гүйцэтгэсэн мэдээллийг цуглуулах маягтыг угсрах [энгийн/pdf маягт угсрах]"
+                ],
+                note: "Сургалтын бэлтгэл бэлдэхдээ нийт ажилчид эсвэл газар нэгж бүрийн төлөөлөл байх хэрэгтэйг анхаарна уу. (Онлайн уулзалт хийнэ)"
+            },
+            {
+                title: "Ажлын хавтас",
+                icon: "folder-kanban",
+                description: "Ажлуудыг ангилах, KPI тооцох боломжтой бүтэц үүсгэх. Энэ нь тайлангийн үндэс болно.",
+                tasks: [
+                    "Ажлын хавтасны зохицуулалтыг тодорхойлох",
+                    "Нээлттэй болон Хаалттай хавтас үүсгэх",
+                    "Ажилчдын хувийн хавтас тохируулах"
+                ],
+                note: "Ажлын хавтас нь KPI тооцоход хэрэглэгдэх тул Төсөл эсвэл Газар нэгжээр нь оновчтой нэрлээрэй."
+            },
+            {
+                title: "Ажил ба Хяналт",
+                icon: "check-square",
+                description: "Төлөвлөгөөт ажлуудыг системд оруулах, гүйцэтгэлийг хянах, хариуцлага оноох.",
+                tasks: [
+                    "Ажил үүсгэх туршилт хийх",
+                    "Улирал, сарын төлөвлөгөөг оруулах"
+                ],
+                workshopPrep: [
+                    "Ажлын хавтаснуудыг бэлэн болгосон байх",
+                    "Ажилтан бүр 3-аас доошгүй ажил үүсгэж туршсан байх"
+                ]
+            },
+            {
+                title: "Автоматжуулалт",
+                icon: "file-text",
+                description: "Байгууллагын дүрэм журам, маягтуудыг цахимжуулж, цаасгүй технологид шилжих.",
+                tasks: [
+                    "Дүрэм журмуудаа системд оруулах",
+                    "Маягт оруулах ба угсрах"
+                ],
+                workshopPrep: [
+                    "Багадаа 2 журам бэлдсэн байх",
+                    "1 энгийн маягт, 1 PDF маягт бэлдэх"
+                ]
+            },
+            {
+                title: "Зорилго ба KPI",
+                icon: "target",
+                description: "Стратегийн зорилгыг гүйцэтгэлийн үнэлгээтэй уялдуулж, үр дүнг тоогоор хэмжих.",
+                tasks: [
+                    "Зорилго үүсгэн турших",
+                    "Үнэлгээний шалгуур үзүүлэлт оруулах"
+                ],
+                workshopPrep: [
+                    "Ажилтнуудын KPI хэмжүүрүүдийг тодорхой болгох",
+                    "Ажлын процесс ба хариуцлагыг холбох"
+                ]
+            },
+            {
+                title: "Комплаенс",
+                icon: "shield",
+                description: "Хууль тогтоомж, стандарт, дотоод журмын нийцлийг хангах хяналтын тогтолцоо.",
+                tasks: [
+                    "Комплаенс модуль туршиж үзэх",
+                    "Framework үүсгэх"
+                ],
+                workshopPrep: [
+                    "Шинжилгээ хийх журмаа бэлдсэн байх",
+                    "Хууль тогтоомжийн жагсаалт бэлдэх"
+                ]
+            }
+        ];
+
+        let activeStep = 0;
+        let completedTasks = {};
+
+        function init() {
+            renderRoadmap();
+            renderDetail();
+            updateOverallProgress();
+            lucide.createIcons();
+        }
+
+        function renderRoadmap() {
+            const container = document.getElementById('roadmap-flow');
+            container.innerHTML = `
+                <div class="flow-line-bg"></div>
+                <div id="flow-progress" class="flow-line-progress"></div>
+            `;
+            
+            steps.forEach((step, idx) => {
+                const isActive = activeStep === idx;
+                const isCompleted = isStepFinished(idx);
+                
+                const stepEl = document.createElement('div');
+                stepEl.className = `step-item ${isActive ? 'step-active' : ''} ${isCompleted ? 'step-completed' : ''}`;
+                stepEl.onclick = () => {
+                    activeStep = idx;
+                    renderRoadmap();
+                    renderDetail();
+                };
+
+                stepEl.innerHTML = `
+                    <div class="step-circle">
+                        <i data-lucide="${isCompleted ? 'check' : step.icon}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="step-text">${step.title}</div>
+                `;
+                container.appendChild(stepEl);
+            });
+
+            // Update line progress
+            const progress = (activeStep / (steps.length - 1)) * 100;
+            document.getElementById('flow-progress').style.width = `${progress}%`;
+            
+            lucide.createIcons();
+        }
+
+        function renderDetail() {
+            const step = steps[activeStep];
+            const content = document.getElementById('active-step-content');
+            
+            content.innerHTML = `
+                <div class="detail-card">
+                    <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm mb-8">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-widest mb-3">
+                                    <span class="bg-indigo-50 px-3 py-1 rounded-full">Алхам ${activeStep + 1}</span>
+                                </div>
+                                <h2 class="text-4xl font-extrabold text-slate-900 mb-4">${step.title}</h2>
+                                <p class="text-lg text-slate-600 leading-relaxed max-w-3xl">${step.description}</p>
+                            </div>
+                            
+                            ${step.video && step.video !== "#" ? `
+                                <a href="${step.video}" target="_blank" class="flex items-center gap-4 px-8 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl shadow-xl shadow-indigo-100 transition-all group">
+                                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <i data-lucide="play" class="fill-current w-5 h-5"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="text-[10px] font-bold uppercase opacity-70">Заавар бичлэг</div>
+                                        <div class="font-bold">Шууд үзэх</div>
+                                    </div>
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Tasks -->
+                        <div class="bg-white rounded-3xl p-8 border border-slate-200">
+                            <h3 class="text-xl font-bold mb-8 flex items-center gap-3">
+                                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+                                    <i data-lucide="check-circle-2"></i>
+                                </div>
+                                Хийж гүйцэтгэх
+                            </h3>
+                            <div class="space-y-4">
+                                ${step.tasks.map((task, i) => {
+                                    const checked = completedTasks[`${activeStep}-${i}`];
+                                    return `
+                                        <div onclick="toggleTask(${activeStep}, ${i})" class="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 cursor-pointer transition-all border border-transparent hover:border-slate-100 group">
+                                            <div class="mt-0.5 w-6 h-6 rounded-lg border-2 ${checked ? 'bg-emerald-500 border-emerald-500 shadow-lg shadow-emerald-100' : 'border-slate-200 bg-white group-hover:border-indigo-400'} flex items-center justify-center transition-all">
+                                                ${checked ? '<i data-lucide="check" class="w-4 h-4 text-white"></i>' : ''}
+                                            </div>
+                                            <span class="text-sm font-medium ${checked ? 'text-slate-400 line-through' : 'text-slate-700'}">${task}</span>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Workshop / Note -->
+                        <div class="space-y-8">
+                            ${step.workshopPrep ? `
+                                <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
+                                    <div class="absolute -top-4 -right-4 opacity-10">
+                                        <i data-lucide="award" class="w-40 h-40"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold mb-8 flex items-center gap-3 relative z-10 text-indigo-400">
+                                        <i data-lucide="zap"></i>
+                                        Воркшоп бэлтгэл
+                                    </h3>
+                                    <div class="space-y-4 relative z-10">
+                                        ${step.workshopPrep.map((prep, i) => {
+                                            const checked = completedTasks[`${activeStep}-p-${i}`];
+                                            return `
+                                                <div onclick="toggleTask(${activeStep}, ${i}, true)" class="flex items-start gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 cursor-pointer transition-all border border-white/5">
+                                                    <div class="mt-0.5 w-6 h-6 rounded-lg border-2 ${checked ? 'bg-indigo-500 border-indigo-500' : 'border-slate-600 bg-transparent'} flex items-center justify-center transition-all">
+                                                        ${checked ? '<i data-lucide="check" class="w-4 h-4 text-white"></i>' : ''}
+                                                    </div>
+                                                    <span class="text-sm font-medium ${checked ? 'text-slate-500 line-through' : 'text-slate-200'}">${prep}</span>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${step.note ? `
+                                <div class="bg-amber-50 p-8 rounded-3xl border border-amber-100 flex gap-4">
+                                    <div class="text-amber-500"><i data-lucide="info"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-amber-900 mb-2">Санамж</h4>
+                                        <p class="text-sm text-amber-800 leading-relaxed">${step.note}</p>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex justify-between items-center mt-12 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <button onclick="navigate(-1)" ${activeStep === 0 ? 'disabled' : ''} class="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-100 disabled:opacity-20 disabled:cursor-not-allowed">
+                            <i data-lucide="arrow-left" class="w-5 h-5"></i> Өмнөх
+                        </button>
+                        <button onclick="navigate(1)" ${activeStep === steps.length - 1 ? 'disabled' : ''} class="flex items-center gap-2 px-8 py-3 rounded-xl font-bold bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-20 shadow-lg shadow-indigo-100 active:scale-95 transition-all">
+                            Дараах алхам <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function navigate(dir) {
+            const next = activeStep + dir;
+            if (next >= 0 && next < steps.length) {
+                activeStep = next;
+                renderRoadmap();
+                renderDetail();
+            }
+        }
+
+        function toggleTask(sIdx, tIdx, isPrep = false) {
+            const key = isPrep ? `${sIdx}-p-${tIdx}` : `${sIdx}-${tIdx}`;
+            completedTasks[key] = !completedTasks[key];
+            renderDetail();
+            renderRoadmap();
+            updateOverallProgress();
+        }
+
+        function isStepFinished(idx) {
+            const step = steps[idx];
+            let total = step.tasks.length + (step.workshopPrep ? step.workshopPrep.length : 0);
+            let finished = 0;
+            step.tasks.forEach((_, i) => { if (completedTasks[`${idx}-${i}`]) finished++; });
+            if (step.workshopPrep) {
+                step.workshopPrep.forEach((_, i) => { if (completedTasks[`${idx}-p-${i}`]) finished++; });
+            }
+            return finished === total;
+        }
+
+        function updateOverallProgress() {
+            const total = steps.reduce((acc, curr) => acc + curr.tasks.length + (curr.workshopPrep ? curr.workshopPrep.length : 0), 0);
+            const finished = Object.values(completedTasks).filter(v => v).length;
+            const percent = Math.round((finished / total) * 100) || 0;
+            
+            document.getElementById('top-progress-bar').style.width = `${percent}%`;
+            document.getElementById('top-progress-text').innerText = `${percent}%`;
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
